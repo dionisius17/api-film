@@ -88,3 +88,27 @@ export const getProfile = (navigate) => async (dispatch, getState) => {
     toast.error(error.message);
   }
 };
+
+export const googleLogin = (data, navigate) => async (dispatch) => {
+  try{
+    const response = await axios.post (
+      `${process.env.REACT_APP_AUTH_API}/api/V1/auth/google`,
+      data,
+      { "content type": "application/json"}
+    );
+
+    const { token } = response?.data?.data;
+
+    dispatch(setToken(token));
+    dispatch(setIsLoggedIn(true))
+
+    navigate("/");
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error?.response?.data?.message);
+      return;
+    }
+
+    toast.error(error.message);
+  }
+}
